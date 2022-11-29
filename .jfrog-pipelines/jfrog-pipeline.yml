@@ -13,11 +13,6 @@ resources:
         # Specifies which branches will trigger dependent steps
         include: master
 
-  - name: cron_trigger
-    type: CronTrigger
-    configuration:
-      interval: '0 0 * * *'     # Once a day
-
 pipelines:
   - name: Just_ping
     configuration:
@@ -29,7 +24,7 @@ pipelines:
         configuration:
           inputResources:
             # Sets up step to be triggered when there are commit events to myFirstRepo
-            - name: cron_trigger
+            - name: myFirstRepo
           integrations:
             - name: token_pseme
         execution:
