@@ -14,24 +14,6 @@ resources:
         include: master
 
 pipelines:
-  - name: Just_ping
-    configuration:
-      jfrogCliVersion: 2
-    steps:
-#Ping instances
-      - name: Ping_psemea
-        type: Bash
-        configuration:
-          inputResources:
-            # Sets up step to be triggered when there are commit events to myFirstRepo
-            - name: myFirstRepo
-          integrations:
-            - name: token_pseme
-        execution:
-          onStart:
-            - configure_jfrog_cli --artifactory-url ${int_token_pseme_url}/artifactory --access-token ${int_token_pseme_accessToken} --server-name psemea
-          onExecute:
-            - jf rt ping --server-id psemea
        
   - name: Use_The_CLI
     configuration:
@@ -39,7 +21,7 @@ pipelines:
     steps:
 
 #Execute the plugin
-      - name: Get  All Ignored violations
+      - name: Get_All_Ignored_violations
         type: Bash
         configuration:
           inputResources:
