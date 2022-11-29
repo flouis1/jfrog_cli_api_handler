@@ -11,7 +11,7 @@ resources:
       path: {{ .Values.myRepo.path }} # this will be replaced from values.yml
       branches:
         # Specifies which branches will trigger dependent steps
-        include: master
+        include: main
 
 pipelines:
        
