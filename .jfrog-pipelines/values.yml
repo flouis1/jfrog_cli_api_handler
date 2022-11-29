@@ -1,3 +1,0 @@
-myRepo:
-  gitProvider: jfrog_cli_pipeline
-  path: flouis1/jfrog_cli_api_handler

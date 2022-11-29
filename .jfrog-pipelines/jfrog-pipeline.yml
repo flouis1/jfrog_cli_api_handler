@@ -6,9 +6,9 @@ resources:
     type: GitRepo
     configuration:
       # SCM integration where the repository is located
-      gitProvider: {{ .Values.myRepo.gitProvider }} # this will be replaced from values.yml
+      gitProvider: jfrog_cli_pipeline # this will be replaced from values.yml
       # Repository path, including org name/repo name
-      path: {{ .Values.myRepo.path }} # this will be replaced from values.yml
+      path: flouis1/jfrog_cli_api_handler # this will be replaced from values.yml
       branches:
         # Specifies which branches will trigger dependent steps
         include: main
