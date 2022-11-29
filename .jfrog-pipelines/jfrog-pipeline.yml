@@ -1,5 +1,3 @@
-template: true   # required for local templates.
-
 resources:
   - name: myFirstRepo
     type: GitRepo
