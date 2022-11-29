@@ -1,0 +1,63 @@
+template: true   # required for local templates.
+valuesFilePath: ./values.yml
+
+resources:
+  - name: myFirstRepo
+    type: GitRepo
+    configuration:
+      # SCM integration where the repository is located
+      gitProvider: {{ .Values.myRepo.gitProvider }} # this will be replaced from values.yml
+      # Repository path, including org name/repo name
+      path: {{ .Values.myRepo.path }} # this will be replaced from values.yml
+      branches:
+        # Specifies which branches will trigger dependent steps
+        include: master
+
+  - name: cron_trigger
+    type: CronTrigger
+    configuration:
+      interval: '0 0 * * *'     # Once a day
+
+pipelines:
+  - name: Just_ping
+    configuration:
+      jfrogCliVersion: 2
+    steps:
+#Ping instances
+      - name: Ping_psemea
+        type: Bash
+        configuration:
+          inputResources:
+            # Sets up step to be triggered when there are commit events to myFirstRepo
+            - name: cron_trigger
+          integrations:
+            - name: token_pseme
+        execution:
+          onStart:
+            - configure_jfrog_cli --artifactory-url ${int_token_pseme_url}/artifactory --access-token ${int_token_pseme_accessToken} --server-name psemea
+          onExecute:
+            - jf rt ping --server-id psemea
+       
+  - name: Use_The_CLI
+    configuration:
+      jfrogCliVersion: 2
+    steps:
+
+#Execute the plugin
+      - name: Get  All Ignored violations
+        type: Bash
+        configuration:
+          inputResources:
+            # Sets up step to be triggered when there are commit events to myFirstRepo
+            - name: myFirstRepo
+          integrations:
+            - name: token_fabienl
+            - name: token_pseme
+        execution:
+          onStart:
+            - configure_jfrog_cli --artifactory-url ${int_token_fabienl_url}/artifactory --access-token ${int_token_fabienl_accessToken} --server-name fabienl
+            - jf c s
+            - jf xr curl -X POST -H "Content-Type:application/json" /api/v1/violations/ignored\?limit\=2000 -d '{}'| jq '.' > all_ignored_violations.json
+          onExecute:
+            - ls -all
+            - cat all_ignored_violations.json
